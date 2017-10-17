@@ -85,10 +85,13 @@ chosen="$(whiptail --title "Version" --menu --noitem "Select version to symlink"
 #    "4" "$HOME/bin"  \
 #    3>&1 1>&2 2>&3)"
 
-if [ -x "$binaries"/go ]; then
-    whiptail --title "Success" --yesno "Found existing installation at $binaries/go\n\nOverwrite?" 15 60
-    if [ "$?" != "0" ]; then exit; fi
+if [ -x "$install"/go/bin/go ]; then
+    whiptail --title "Warning" --yesno "Found existing installation at $install/go\n\nOverwrite?" 15 60
 fi
+if [ -x "$binaries"/go ]; then
+    whiptail --title "Warning" --yesno "Found existing installation at $binaries/go\n\nOverwrite?" 15 60
+fi
+if [ "$?" != "0" ]; then exit; fi
 
 ln -sf "$install"/go-"$chosen" "$install"/go
 ln -sf "$install"/go/bin/go "$install"/go/bin/godoc "$install"/go/bin/gofmt "$binaries"
