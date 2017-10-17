@@ -40,7 +40,6 @@ function goinstall() {
 
 ##main program starts here
 
-
 whiptail --title "Welcome" --yesno "This program downloads and installs Go binaries, and symlinks them.\n\nContinue?" 15 60
 if [ "$?" != "0" ]; then exit; fi
 
@@ -58,7 +57,7 @@ for item in $goversions; do
 done
 
 selected="$(whiptail --title "Versions"  --checklist --noitem --separate-output\
-    "Select versions to install" 15 30 8 \
+    "Select versions to install" 25 30 18 \
     $list \
     3>&1 1>&2 2>&3)"
 
