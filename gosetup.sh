@@ -16,7 +16,6 @@ fi
 
 tmpdir="/tmp"
 
-
 install="/usr/local"
 #install="$(whiptail --title "Install Location" --inputbox "Where would you like to install the go versions?" 15 60 \
 #    "/usr/local" \
@@ -51,7 +50,7 @@ for choice in $selected; do
     list+="$choice $choice "
 done
 
-final="$(whiptail --title "Version" --menu --noitem "Select version to symlink" 15 30 6 \
+chosen="$(whiptail --title "Version" --menu --noitem "Select version to symlink" 15 30 6 \
     "$list" \
     3>&1 1>&2 2>&3)" 
 
@@ -63,12 +62,13 @@ binaries="/usr/local/bin"
 #    "4" "$HOME/bin"  \
 #    3>&1 1>&2 2>&3)"
 
-echo ln -s "$install"/go-"$final" "$install"/go
+echo ln -s "$install"/go-"$chosen" "$install"/go
 echo ln -s "$install"/go/bin/go "$install"/go/bin/godoc "$install"/go/bin/gofmt "$binaries"
 
 if [ -x "$binaries"/go ]; then
-    whiptail --title "Success" --msgbox "Symlinked $binaries/go to Go Version $final" 15 30 
+    whiptail --title "Success" --msgbox "Symlinked $binaries/go to Go Version $chosen" 15 30 
 else
     whiptail --title "Error!" --msgbox "Symlink Failed!" 15 30 
 fi
+
 ##EOF##
