@@ -12,12 +12,30 @@ fi
 
 if [ ! -x "$(which whiptail)" ]; then
     echo "Couldn't find whiptail!"
-    exit
+    exit 1
 fi
 if [ ! -x "$(which git)" ]; then
     echo "Couldn't find git!"
-    exit
+    exit 1
 fi
+
+platform="unknown"
+case "$OSTYPE" in
+    linux-gnu)  platform="linux" ;;
+    FreeBSD)    platform="freebsd" ;;
+    darwin*)    platform="darwin" ;;
+    *)    echo "$OSTYPE-$(uname -m) not found"; exit 1 ;;
+esac
+
+case "$(uname -m)" in
+    i386 | i686)               platform="$platform-386" ;;
+    x86_64)             platform="$platform-amd64" ;;
+    armv6* | armv7*)    platform="$platform-armv61" ;;
+    armv8*)             platform="$platform-arm64" ;;
+    ppc64le)             platform="$platform-ppc64le" ;;
+    s390x)             platform="$platform-s390x" ;;
+    *)      echo "$OSTYPE-$(uname -m) not found"; exit 1 ;;
+esac
 
 tmpdir="/tmp"
 install="/usr/local"
@@ -30,17 +48,17 @@ function goinstall() {
     fi
 
     mkdir -p $install/go-"$1"
-    wget -c -P $tmpdir https://storage.googleapis.com/golang/go"$1".linux-amd64.tar.gz
-    tar x --keep-newer-files -f $tmpdir/go"$1".linux-amd64.tar.gz -C "$install"/go-"$1" --strip-components=1
-    rm $tmpdir/go"$1".linux-amd64.tar.gz
+    wget -c -P $tmpdir https://storage.googleapis.com/golang/go"$1"."$platform".tar.gz
+    tar xv --keep-newer-files -f $tmpdir/go"$1"."$platform".tar.gz -C "$install"/go-"$1" --strip-components=1
+    rm $tmpdir/go"$1"."$platform".tar.gz
 
-    echo "Installed Go Version $1 to $install/go-$1"
-    #whiptail --title "Success" --msgbox "Installed Go Version $1 to $install/go-$1" 15 60
+    #echo "Installed Go Version $1 to $install/go-$1"
+    whiptail --title "Success" --msgbox "Installed Go Version $1 to $install/go-$1" 15 60
 }
 
 ##main program starts here
 
-whiptail --title "Welcome" --yesno "This program downloads and installs Go binaries, and symlinks them.\n\nContinue?" 15 60
+whiptail --title "Welcome" --yesno "This program downloads and installs Go binaries, and symlinks them.\n\nDetected platform: $platform\n\nContinue?" 15 60
 if [ "$?" != "0" ]; then exit; fi
 
 if [ $TERM="xterm" ]; then #whiptail has a bug here
