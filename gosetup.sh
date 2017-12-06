@@ -111,7 +111,7 @@ if [ -x "$binaries"/go ]; then
 fi
 if [ "$?" != "0" ]; then exit; fi
 
-ln -sf "$install"/go-"$chosen" "$install"/go
+ln -sfT "$install"/go-"$chosen" "$install"/go
 ln -sf "$install"/go/bin/go "$install"/go/bin/godoc "$install"/go/bin/gofmt "$binaries"
 
 if [ -x "$binaries"/go ]; then
