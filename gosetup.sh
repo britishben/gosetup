@@ -67,7 +67,7 @@ if [ $TERM="xterm" ]; then #whiptail has a bug here
 else
     whiptail --title "Scraping" --infobox "Retrieving list of Go versions - please wait." 15 60
 fi
-goversions=$( git ls-remote -t https://go.googlesource.com/go | cut -d/ -f3 | grep -oP 'go\K\d+(\.\d+)+' | sort -Vr | uniq )
+goversions=$( git ls-remote -t https://go.googlesource.com/go | grep -oP 'go\K[\d\.]+$' | sort -Vr )
 
 list=""
 for item in $goversions; do
